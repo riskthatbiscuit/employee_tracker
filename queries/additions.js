@@ -1,3 +1,16 @@
+// Import dependencies
+const inquirer = require("inquirer");
+
+function executeQuery(db, sqlQuery, callback) {
+  db.query(sqlQuery, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    console.table(result);
+    callback();
+  });
+}
+
 const question2 = [
   {
     type: "input",
@@ -37,13 +50,13 @@ const question4 = [
   },
   {
     type: "input",
-    name: "role",
-    message: "What is the role they will do?",
+    name: "role_id",
+    message: "What is the role id they will do?",
   },
   {
     type: "input",
-    name: "managerName",
-    message: "Who is the person's manager?",
+    name: "manager_id",
+    message: "Who is the person's manager's id?",
   },
 ];
 
@@ -67,10 +80,10 @@ function addRole(db, runQueryLoop) {
   inquirer.prompt(question3).then((answers) => {
     const role = answers.role;
     const salary = answers.salary;
-    const department_id = answers.department_id;
+    const department_id = answers.department;
     const sqlQuery =
-      "INSERT INTO roles (title, salary, department_id) VALUES (?,?,?);";
-
+      "INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)";
+    console.log(sqlQuery)
     db.query(sqlQuery, [role, salary, department_id], (err, result) => {
       if (err) {
         console.log(err);
@@ -81,3 +94,29 @@ function addRole(db, runQueryLoop) {
     });
   });
 }
+
+function addEmployee(db, runQueryLoop) {
+  inquirer.prompt(question4).then((answers) => {
+    const firstName = answers.firstName;
+    const lastName = answers.lastName;
+    const role_id = answers.role_id;
+    const manager_id = answers.manager_id;
+    const sqlQuery =
+      "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
+
+    db.query(
+      sqlQuery,
+      [firstName, lastName, role_id, manager_id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(`Could not make change`);
+          runQueryLoop();
+        }
+      }
+    );
+  });
+}
+
+module.exports = { addDepartment, addEmployee, addRole };

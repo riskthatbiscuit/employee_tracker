@@ -38,13 +38,13 @@ function init(db) {
           displays.viewAllEmployees(db, runQueryLoop);
           break;
         case "Add a department":
-          addDepartment(db, runQueryLoop);
+          additions.addDepartment(db, runQueryLoop);
           break;
         case "Add a role":
-          addRole(db, runQueryLoop);
+          additions.addRole(db, runQueryLoop);
           break;
         case "Add an employee":
-          addEmployee(db, runQueryLoop);
+          additions.addEmployee(db, runQueryLoop);
           break;
         case "Update an employee":
           updateEmployee(db, runQueryLoop);
