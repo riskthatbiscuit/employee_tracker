@@ -1,41 +1,16 @@
 // Import dependencies
 const inquirer = require("inquirer");
-const { viewAllDepartments } = require("./displays");
-
-const question2 = [
-  {
-    type: "input",
-    name: "departmentName",
-    message: "What department would you like to add?",
-  },
-];
-
-
-
-const question4 = [
-  {
-    type: "input",
-    name: "firstName",
-    message: "What is the first name of the employee?",
-  },
-  {
-    type: "input",
-    name: "lastName",
-    message: "What is the last name of the employee?",
-  },
-  {
-    type: "input",
-    name: "role_id",
-    message: "What is the role id they will do?",
-  },
-  {
-    type: "input",
-    name: "manager_id",
-    message: "Who is the person's manager's id?",
-  },
-];
+const { viewAllDepartments, viewAllEmployees, viewAllRoles } = require("./displays");
 
 function addDepartment(db, runQueryLoop) {
+  
+  const question2 = [
+    {
+      type: "input",
+      name: "departmentName",
+      message: "What department would you like to add?",
+    },
+  ];
   
   inquirer.prompt(question2).then((answers) => {
     const departmentName = answers.departmentName;
@@ -78,7 +53,7 @@ function addRole(db, runQueryLoop) {
         choices: departmentChoices,
       },
     ];
-  
+    
     inquirer.prompt(question3).then((answers) => {
       const role = answers.role;
       const salary = answers.salary;
@@ -99,26 +74,69 @@ function addRole(db, runQueryLoop) {
 }
 
 function addEmployee(db, runQueryLoop) {
-  inquirer.prompt(question4).then((answers) => {
-    const firstName = answers.firstName;
-    const lastName = answers.lastName;
-    const role_id = answers.role_id;
-    const manager_id = answers.manager_id;
-    const sqlQuery =
-      "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
+  
+  viewAllRoles(db,(roles) => {
+  const roleChoices = roles.map((role) => ({
+    name: role.job_title,
+    value: role.role_id,
+  }));
+    // console.log(roleChoices);
+  
+    viewAllEmployees(db, (employees) => {
+      const employeeChoices = employees.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.employee_id,
+      }));
+      // console.log(employeeChoices);
 
-    db.query(
-      sqlQuery,
-      [firstName, lastName, role_id, manager_id],
-      (err, result) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(`Could not make change`);
-          runQueryLoop();
-        }
-      }
-    );
+      const question4 = [
+        {
+          type: "input",
+          name: "firstName",
+          message: "What is the first name of the employee?",
+        },
+        {
+          type: "input",
+          name: "lastName",
+          message: "What is the last name of the employee?",
+        },
+        {
+          type: "list",
+          name: "role_id",
+          message: "Select the role for the employee",
+          choices: roleChoices,
+        },
+        {
+          type: "list",
+          name: "manager_id",
+          message: "Who is the person's manager?",
+          choices: employeeChoices,
+        },
+      ];
+
+
+      inquirer.prompt(question4).then((answers) => {
+        const firstName = answers.firstName;
+        const lastName = answers.lastName;
+        const role_id = answers.role_id;
+        const manager_id = answers.manager_id;
+        const sqlQuery =
+        "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
+        
+        db.query(
+          sqlQuery,
+          [firstName, lastName, role_id, manager_id],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(`Could not make change`);
+              runQueryLoop();
+            }
+          }
+        );
+      });
+    });
   });
 }
 
