@@ -114,7 +114,6 @@ function addEmployee(db, runQueryLoop) {
         },
       ];
 
-
       inquirer.prompt(question4).then((answers) => {
         const firstName = answers.firstName;
         const lastName = answers.lastName;

@@ -9,13 +9,27 @@ const amendments = require('./amendments');
 
 // Define initial question for user
 const question1 = [
-      {
-        type: 'list',
-        name: 'question1',
-        message: 'What would you like to do?',
-        choices: ['View all departments', 'View all roles' ,'View all employees', 'Add a department', 'Add a role', 'Add an employee','Update an employee','Other','Exit']
-     }
-    ]
+  {
+    type: "list",
+    name: "question1",
+    message: "What would you like to do?",
+    choices: [
+      "View all departments",
+      "View all roles",
+      "View all employees",
+      "Add a department",
+      "Add a role",
+      "Add an employee",
+      "Delete a department",
+      "Delete a role",
+      "Delete an employee",
+      "Update a role",
+      "Update an employee",
+      "Other",
+      "Exit",
+    ],
+  },
+];
 
 // Create a function to initialize app
 function init(db) {
@@ -56,10 +70,19 @@ function init(db) {
           additions.addEmployee(db, runQueryLoop);
           break;
         case "Update an employee":
-          updateEmployee(db, runQueryLoop);
+          amendments.updateEmployee(db, runQueryLoop);
           break;
-        case "Other":
-          otherOptions(db, runQueryLoop);
+        case "Update a role":
+          amendments.updateRole(db, runQueryLoop);
+          break;
+        case "Delete a department":
+          deletions.deleteDepartment(db, runQueryLoop);
+          break;
+        case "Delete a role":
+          deletions.deleteRole(db, runQueryLoop);
+          break;
+        case "Delete an employee":
+          deletions.deleteEmployee(db, runQueryLoop);
           break;
         case "Exit":
           console.log("Exiting...");
