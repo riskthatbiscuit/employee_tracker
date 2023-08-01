@@ -31,6 +31,8 @@ UPDATE employee
 SET manager_id = 1
 WHERE id = 31;
 
+
+-- EXTRAS
 -- View employees by manager.
 
 -- View employees by department.
