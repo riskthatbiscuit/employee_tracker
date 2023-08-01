@@ -3,8 +3,7 @@ function executeQuery(db, sqlQuery, callback) {
     if (err) {
       console.log(err);
     }
-    console.table(result);
-    callback();
+    callback(result);
   });
 }
 

@@ -1,15 +1,6 @@
 // Import dependencies
 const inquirer = require("inquirer");
-
-function executeQuery(db, sqlQuery, callback) {
-  db.query(sqlQuery, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-    console.table(result);
-    callback();
-  });
-}
+const { viewAllDepartments } = require("./displays");
 
 const question2 = [
   {
@@ -19,23 +10,7 @@ const question2 = [
   },
 ];
 
-const question3 = [
-  {
-    type: "input",
-    name: "role",
-    message: "What is the role?",
-  },
-  {
-    type: "input",
-    name: "salary",
-    message: "What is the salary of the role?",
-  },
-  {
-    type: "input",
-    name: "department",
-    message: "What is the id of the department to which the role belongs?",
-  },
-];
+
 
 const question4 = [
   {
@@ -61,10 +36,11 @@ const question4 = [
 ];
 
 function addDepartment(db, runQueryLoop) {
+  
   inquirer.prompt(question2).then((answers) => {
     const departmentName = answers.departmentName;
     const sqlQuery = "INSERT INTO department (name) VALUES (?)";
-
+    
     db.query(sqlQuery, [departmentName], (err, result) => {
       if (err) {
         console.log(err);
@@ -77,20 +53,47 @@ function addDepartment(db, runQueryLoop) {
 }
 
 function addRole(db, runQueryLoop) {
-  inquirer.prompt(question3).then((answers) => {
-    const role = answers.role;
-    const salary = answers.salary;
-    const department_id = answers.department;
-    const sqlQuery =
+  
+  viewAllDepartments(db,(departments) => {
+    const departmentChoices = departments.map((department) => ({
+      name: department.department_name,
+      value: department.department_id,
+    }));
+    // console.log(departmentChoices);
+    const question3 = [
+      {
+        type: "input",
+        name: "role",
+        message: "What is the role?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary of the role?",
+      },
+      {
+        type: "list",
+        name: "department",
+        message: "Select the department for the role",
+        choices: departmentChoices,
+      },
+    ];
+  
+    inquirer.prompt(question3).then((answers) => {
+      const role = answers.role;
+      const salary = answers.salary;
+      const department_id = answers.department;
+      const sqlQuery =
       "INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)";
-    console.log(sqlQuery)
-    db.query(sqlQuery, [role, salary, department_id], (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`Could not make change`);
-        runQueryLoop();
-      }
+      db.query(sqlQuery, [role, salary, department_id], (err, result) => {
+        if (err) {
+          console.log(err);
+          console.log(`Could not make change`);
+        } else {
+          console.log(`Change made successfully`)
+          runQueryLoop();
+        }
+      });
     });
   });
 }

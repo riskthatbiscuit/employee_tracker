@@ -29,13 +29,22 @@ function init(db) {
       // Handle the selected option based on user's choice
       switch (optionChoice) {
         case "View all departments":
-          displays.viewAllDepartments(db, runQueryLoop);
+          displays.viewAllDepartments(db, (result) => {
+            console.table(result);
+            runQueryLoop();
+          });
           break;
         case "View all roles":
-          displays.viewAllRoles(db, runQueryLoop);
+          displays.viewAllRoles(db, (result) => {
+            console.table(result);
+            runQueryLoop();
+          });
           break;
         case "View all employees":
-          displays.viewAllEmployees(db, runQueryLoop);
+          displays.viewAllEmployees(db, (result) => {
+            console.table(result);
+            runQueryLoop();
+          });
           break;
         case "Add a department":
           additions.addDepartment(db, runQueryLoop);
