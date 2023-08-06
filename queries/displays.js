@@ -1,3 +1,6 @@
+// File for Display functions (x3)
+
+// Common function for running SQL Query
 function executeQuery(db, sqlQuery, callback) {
   db.query(sqlQuery, (err, result) => {
     if (err) {
@@ -39,4 +42,5 @@ function viewAllEmployees(db, callback) {
   executeQuery(db, sqlQuery, callback);
 }
 
+// Export display functions
 module.exports = { viewAllDepartments, viewAllEmployees, viewAllRoles };

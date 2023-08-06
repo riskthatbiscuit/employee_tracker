@@ -25,7 +25,6 @@ const question1 = [
       "Delete an employee",
       "Update a role",
       "Update an employee",
-      "Other",
       "Exit",
     ],
   },
@@ -42,6 +41,7 @@ function init(db) {
 
       // Handle the selected option based on user's choice
       switch (optionChoice) {
+        // View Options
         case "View all departments":
           displays.viewAllDepartments(db, (result) => {
             console.table(result);
@@ -60,6 +60,8 @@ function init(db) {
             runQueryLoop();
           });
           break;
+        
+        // Addition Options
         case "Add a department":
           additions.addDepartment(db, runQueryLoop);
           break;
@@ -69,12 +71,16 @@ function init(db) {
         case "Add an employee":
           additions.addEmployee(db, runQueryLoop);
           break;
+        
+        // Amendment Options
         case "Update an employee":
           amendments.updateEmployee(db, runQueryLoop);
           break;
         case "Update a role":
           amendments.updateRole(db, runQueryLoop);
           break;
+
+        // Deletion Options
         case "Delete a department":
           deletions.deleteDepartment(db, runQueryLoop);
           break;
@@ -84,6 +90,8 @@ function init(db) {
         case "Delete an employee":
           deletions.deleteEmployee(db, runQueryLoop);
           break;
+        
+        // Option to Exit 
         case "Exit":
           console.log("Exiting...");
           setTimeout(() => {

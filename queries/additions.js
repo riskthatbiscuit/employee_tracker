@@ -1,9 +1,24 @@
+// File for Addition functions (x3)
+
 // Import dependencies
 const inquirer = require("inquirer");
 const { viewAllDepartments, viewAllEmployees, viewAllRoles } = require("./displays");
 
+// Common function for running SQL query and displaying console message
+function executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop){
+    db.query(sqlQuery, ansArray, (err, result) => {
+      if (err) {
+        console.log(err);
+        console.log(`Could not make change`);
+      } else {
+        console.log(successMessage);
+        runQueryLoop();
+      }
+    });
+}
+
 function addDepartment(db, runQueryLoop) {
-  
+  // Create questions for department input
   const question2 = [
     {
       type: "input",
@@ -12,30 +27,26 @@ function addDepartment(db, runQueryLoop) {
     },
   ];
   
+  // Recieving response, generating SQL and inputting into executeQuery
   inquirer.prompt(question2).then((answers) => {
     const departmentName = answers.departmentName;
     const sqlQuery = "INSERT INTO department (name) VALUES (?)";
-    
-    db.query(sqlQuery, [departmentName], (err, result) => {
-      if (err) {
-        console.log(err);
-        console.log(`Could not make change`);
-      } else {
-        console.log(`Change made successfully, ${departmentName} added`)
-        runQueryLoop();
-      }
-    });
+    const ansArray = [departmentName];
+    const successMessage = `Change made successfully, ${departmentName} added`;
+
+    executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
   });
 }
 
 function addRole(db, runQueryLoop) {
-  
+  // Getting list of departments to create list for selection
   viewAllDepartments(db,(departments) => {
     const departmentChoices = departments.map((department) => ({
       name: department.department_name,
       value: department.department_id,
     }));
-    // console.log(departmentChoices);
+    
+    // Create questions for department input
     const question3 = [
       {
         type: "input",
@@ -55,40 +66,35 @@ function addRole(db, runQueryLoop) {
       },
     ];
     
+    // Recieving response, generating SQL and inputting into executeQuery
     inquirer.prompt(question3).then((answers) => {
       const role = answers.role;
       const salary = answers.salary;
       const department_id = answers.department;
       const sqlQuery =
-      "INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)";
-      db.query(sqlQuery, [role, salary, department_id], (err, result) => {
-        if (err) {
-          console.log(err);
-          console.log(`Could not make change`);
-        } else {
-          console.log(`Change made successfully, ${role} added`)
-          runQueryLoop();
-        }
-      });
+        "INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)";
+      const ansArray = [role, salary, department_id];
+      const successMessage = `Change made successfully, ${role} added`;
+
+      executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
     });
   });
 }
 
 function addEmployee(db, runQueryLoop) {
-  
+  // Getting list of roles to create list for selection
   viewAllRoles(db,(roles) => {
   const roleChoices = roles.map((role) => ({
     name: role.job_title,
     value: role.role_id,
   }));
-    // console.log(roleChoices);
-  
+
+    // Getting list of employees to create list for manager selection
     viewAllEmployees(db, (employees) => {
       const employeeChoices = employees.map((employee) => ({
         name: `${employee.first_name} ${employee.last_name}`,
         value: employee.employee_id,
       }));
-      // console.log(employeeChoices);
 
       const question4 = [
         {
@@ -114,31 +120,23 @@ function addEmployee(db, runQueryLoop) {
           choices: employeeChoices,
         },
       ];
-
+      
+      // Recieving response, generating SQL and inputting into executeQuery
       inquirer.prompt(question4).then((answers) => {
         const firstName = answers.firstName;
         const lastName = answers.lastName;
         const role_id = answers.role_id;
         const manager_id = answers.manager_id;
         const sqlQuery =
-        "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
-        
-        db.query(
-          sqlQuery,
-          [firstName, lastName, role_id, manager_id],
-          (err, result) => {
-            if (err) {
-              console.log(err);
-              console.log(`Could not make change`);
-            } else {
-              console.log(`Change made successully, ${firstName} ${lastName} added`)
-              runQueryLoop();
-            }
-          }
-        );
+          "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
+        const ansArray = [firstName, lastName, role_id, manager_id];
+        const successMessage = `Change made successfully, ${firstName} ${lastName} added`;
+
+        executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
       });
     });
   });
 }
 
+// Export addition functions
 module.exports = { addDepartment, addEmployee, addRole };
