@@ -1,13 +1,25 @@
 // File for Display functions (x3)
 
 // Common function for running SQL Query
-function executeQuery(db, sqlQuery, callback) {
-  db.query(sqlQuery, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-    callback(result);
-  });
+function executeQuery(db, sqlQuery, runQueryLoop, ansArray = [], successMessage = "") {
+  if (ansArray.length > 0) {
+    db.query(sqlQuery, ansArray, (err, result) => {
+      if (err) {
+        console.log(err);
+        console.log(`Could not make change`);
+      } else {
+        console.log(successMessage);
+        runQueryLoop();
+      }
+    });
+  } else {
+    db.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      runQueryLoop(result);
+    });
+  }
 }
 
 function viewAllDepartments(db, callback) {
@@ -43,4 +55,4 @@ function viewAllEmployees(db, callback) {
 }
 
 // Export display functions
-module.exports = { viewAllDepartments, viewAllEmployees, viewAllRoles };
+module.exports = { executeQuery, viewAllDepartments, viewAllEmployees, viewAllRoles };

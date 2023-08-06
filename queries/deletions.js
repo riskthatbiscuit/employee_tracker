@@ -2,20 +2,7 @@
 
 // Import dependencies
 const inquirer = require("inquirer");
-const { viewAllDepartments, viewAllEmployees, viewAllRoles } = require("./displays");
-
-// Common function for running SQL query and displaying console message
-function executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop){
-    db.query(sqlQuery, ansArray, (err, result) => {
-      if (err) {
-        console.log(err);
-        console.log(`Could not make change`);
-      } else {
-        console.log(successMessage);
-        runQueryLoop();
-      }
-    });
-}
+const { executeQuery, viewAllDepartments, viewAllEmployees, viewAllRoles } = require("./displays");
 
 function deleteDepartment(db, runQueryLoop) {
   // Getting list of departments to create list for deletion
@@ -43,7 +30,7 @@ function deleteDepartment(db, runQueryLoop) {
       const ansArray = [department_id];
       const successMessage = `Change made successfully, ${selectedDepartment.name} deleted`;
 
-      executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
+    executeQuery(db, sqlQuery, runQueryLoop, ansArray, successMessage);
     });
   });
 }
@@ -71,7 +58,7 @@ function deleteRole(db, runQueryLoop) {
       const ansArray = [role_id];
       const successMessage = `Change made successfully, ${selectedRole.name} deleted`;
 
-      executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
+      executeQuery(db, sqlQuery, runQueryLoop, ansArray, successMessage);
     });
   });
 }
@@ -103,7 +90,7 @@ function deleteEmployee(db, runQueryLoop) {
       const ansArray = [employee_id];
       const successMessage = `Change made successfully, ${chosenEmployee.name} deleted`;
 
-      executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
+      executeQuery(db, sqlQuery, runQueryLoop, ansArray, successMessage);
     });
   });
 }

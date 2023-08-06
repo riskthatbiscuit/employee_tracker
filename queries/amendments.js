@@ -2,22 +2,10 @@
 
 // Import dependencies
 const inquirer = require("inquirer");
-const {viewAllDepartments, viewAllEmployees, viewAllRoles} = require("./displays");
-
-// Common function for running SQL query and displaying console message
-function executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop){
-    db.query(sqlQuery, ansArray, (err, result) => {
-      if (err) {
-        console.log(err);
-        console.log(`Could not make change`);
-      } else {
-        console.log(successMessage);
-        runQueryLoop();
-      }
-    });
-}
+const { executeQuery, viewAllDepartments, viewAllEmployees, viewAllRoles } = require("./displays");
 
 function updateRole(db, runQueryLoop) {
+  // Getting list of roles to create list 
   viewAllRoles(db, (roles) => {
     const roleChoices = roles.map((role) => ({
       name: role.job_title,
@@ -73,15 +61,15 @@ function updateRole(db, runQueryLoop) {
         ];
 
         inquirer.prompt(question8).then((answers) => {
-            const salary = answers.salary;
-            const department_id = answers.department;
-            const sqlQuery = `UPDATE roles 
+          const salary = answers.salary;
+          const department_id = answers.department;
+          const sqlQuery = `UPDATE roles 
                         SET salary = ?, department_id = ? 
                         WHERE roles.id = ?`;
-            const asnArray = [salary, department_id, role_id];
-            const successMessage = `Change made successfully, ${selectedRole} updated`;
+          const ansArray = [salary, department_id, role_id];
+          const successMessage = `Change made successfully, ${selectedRole.name} updated`;
 
-            executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
+          executeQuery(db, sqlQuery, runQueryLoop, ansArray, successMessage);
         });
       });
     });
@@ -89,6 +77,7 @@ function updateRole(db, runQueryLoop) {
 }
 
 function updateEmployee(db, runQueryLoop) {
+  // Getting list of employees to create list
   viewAllEmployees(db, (employee) => {
     const employeeChoices = employee.map((employee) => ({
       name: `${employee.first_name} ${employee.last_name}`,
@@ -135,13 +124,13 @@ function updateEmployee(db, runQueryLoop) {
           `Current ${chosenEmployee} shown. Enter updated values for first name, last name, role & manager`
         );
       });
-
+      // Getting list of roles to create list for selection
       viewAllRoles(db, (roles) => {
         const roleChoices = roles.map((role) => ({
           name: role.job_title,
           value: role.role_id,
         }));
-
+        // Getting list of employees to create list for manager selection
         viewAllEmployees(db, (employees) => {
           const employeeChoices = employees.map((employee) => ({
             name: `${employee.first_name} ${employee.last_name}`,
@@ -181,10 +170,10 @@ function updateEmployee(db, runQueryLoop) {
             const sqlQuery = `UPDATE employee 
                             SET first_name = ?, last_name = ?, role_id = ?, manager_id = ? 
                             WHERE employee.id = ?`;
-            const asnArray = [firstName, lastName, role_id, manager_id, employee_id];
+            const ansArray = [firstName, lastName, role_id, manager_id, employee_id];
             const successMessage = `Change made successfully, ${chosenEmployee} updated`;
 
-            executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
+            executeQuery(db, sqlQuery, runQueryLoop, ansArray, successMessage);
           });
         });
       });

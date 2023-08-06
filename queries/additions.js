@@ -2,20 +2,7 @@
 
 // Import dependencies
 const inquirer = require("inquirer");
-const { viewAllDepartments, viewAllEmployees, viewAllRoles } = require("./displays");
-
-// Common function for running SQL query and displaying console message
-function executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop){
-    db.query(sqlQuery, ansArray, (err, result) => {
-      if (err) {
-        console.log(err);
-        console.log(`Could not make change`);
-      } else {
-        console.log(successMessage);
-        runQueryLoop();
-      }
-    });
-}
+const { executeQuery, viewAllDepartments, viewAllEmployees, viewAllRoles } = require("./displays");
 
 function addDepartment(db, runQueryLoop) {
   // Create questions for department input
@@ -34,7 +21,7 @@ function addDepartment(db, runQueryLoop) {
     const ansArray = [departmentName];
     const successMessage = `Change made successfully, ${departmentName} added`;
 
-    executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
+    executeQuery(db, sqlQuery, runQueryLoop, ansArray, successMessage);
   });
 }
 
@@ -76,7 +63,7 @@ function addRole(db, runQueryLoop) {
       const ansArray = [role, salary, department_id];
       const successMessage = `Change made successfully, ${role} added`;
 
-      executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
+      executeQuery(db, sqlQuery, runQueryLoop, ansArray, successMessage);
     });
   });
 }
@@ -132,7 +119,7 @@ function addEmployee(db, runQueryLoop) {
         const ansArray = [firstName, lastName, role_id, manager_id];
         const successMessage = `Change made successfully, ${firstName} ${lastName} added`;
 
-        executeQuery(db, sqlQuery, ansArray, successMessage, runQueryLoop);
+        executeQuery(db, sqlQuery, runQueryLoop, ansArray, successMessage);
       });
     });
   });
