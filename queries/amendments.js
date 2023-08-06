@@ -77,12 +77,120 @@ function updateRole(db, runQueryLoop) {
             });
         });
     });
-    
 }
             
         
 function updateEmployee(db, runQueryLoop) {
-            
+    viewAllEmployees(db, (employee) => {  
+        const employeeChoices = employee.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.employee_id,
+        }));
+        
+        const question9 = [
+        {
+            type: "list",
+            name: "employee_id",
+            message: "Select an employee to update",
+            choices: employeeChoices,
+        },
+        ];
+
+        inquirer.prompt(question9).then((answers) => {
+            const employee_id = answers.employee_id;
+            const chosenEmployee = employeeChoices.find((employee) => employee.value === employee_id);
+
+            const sqlQuery = `
+            SELECT
+            employee.id AS employee_id,
+            employee.first_name,
+            employee.last_name,
+            roles.title AS job_title,
+            department.name AS department,
+            roles.salary AS salary,
+            CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+            FROM employee 
+            JOIN roles ON employee.role_id = roles.id
+            JOIN department ON roles.department_id = department.id
+            LEFT JOIN employee AS manager ON employee.manager_id = manager.id
+            WHERE employee.id = ?`;
+
+            db.query(sqlQuery, employee_id, (err, result) => {
+                if (err) {
+                console.log(err);
+                console.log(`Could not find person`);
+                }
+                console.table(result);
+                console.log(
+                `Current ${chosenEmployee} shown. Enter updated values for first name, last name, role & manager`
+                );
+            });
+
+            viewAllRoles(db, (roles) => {
+                const roleChoices = roles.map((role) => ({
+                name: role.job_title,
+                value: role.role_id,
+                }));
+
+                viewAllEmployees(db, (employees) => {
+                    const employeeChoices = employees.map((employee) => ({
+                        name: `${employee.first_name} ${employee.last_name}`,
+                        value: employee.employee_id,
+                    }));
+
+                    const question10 = [
+                    {
+                        type: "input",
+                        name: "firstName",
+                        message: "What is the first name of the employee?",
+                    },
+                    {
+                        type: "input",
+                        name: "lastName",
+                        message: "What is the last name of the employee?",
+                    },
+                    {
+                        type: "list",
+                        name: "role_id",
+                        message: "Select the role for the employee",
+                        choices: roleChoices,
+                    },
+                    {
+                        type: "list",
+                        name: "manager_id",
+                        message: "Who is the person's manager?",
+                        choices: employeeChoices,
+                    },
+                    ];
+
+                    inquirer.prompt(question10).then((answers) => {
+                        const firstName = answers.firstName;
+                        const lastName = answers.lastName;
+                        const role_id = answers.role_id;
+                        const manager_id = answers.manager_id;
+                        const sqlQuery = `UPDATE employee 
+                            SET first_name = ?, last_name = ?, role_id = ?, manager_id = ? 
+                            WHERE employee.id = ?`;
+                        db.query(
+                            sqlQuery,
+                            [firstName, lastName, role_id, manager_id, employee_id],
+                            (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                    console.log(`Could not make change`);
+                                } else {
+                                    console.log(
+                                    `Change made successfully, ${chosenEmployee} updated`
+                                    );
+                                    runQueryLoop();
+                                }
+                            }
+                        );
+                    });
+                });
+            });
+        });        
+    });
 }
         
 module.exports = {updateRole, updateEmployee};
