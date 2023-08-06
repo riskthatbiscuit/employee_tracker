@@ -19,8 +19,9 @@ function addDepartment(db, runQueryLoop) {
     db.query(sqlQuery, [departmentName], (err, result) => {
       if (err) {
         console.log(err);
-      } else {
         console.log(`Could not make change`);
+      } else {
+        console.log(`Change made successfully, ${departmentName} added`)
         runQueryLoop();
       }
     });
@@ -65,7 +66,7 @@ function addRole(db, runQueryLoop) {
           console.log(err);
           console.log(`Could not make change`);
         } else {
-          console.log(`Change made successfully`)
+          console.log(`Change made successfully, ${role} added`)
           runQueryLoop();
         }
       });
@@ -128,8 +129,9 @@ function addEmployee(db, runQueryLoop) {
           (err, result) => {
             if (err) {
               console.log(err);
-            } else {
               console.log(`Could not make change`);
+            } else {
+              console.log(`Change made successully, ${firstName} ${lastName} added`)
               runQueryLoop();
             }
           }
