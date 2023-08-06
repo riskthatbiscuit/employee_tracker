@@ -66,6 +66,10 @@ If you'd like to contribute to the project, follow these steps:
 
 Currently, there are no tests for the Employee Tracker CLI.
 
+## Walkthrough Video 🎥
+
+[Employee-DB Video](EmployeeDB.webm) provides a walkthrough of the functionality of the Employee Tracker. It demonstrates how to use the application.
+
 ## Questions ❓
 
 If you have any questions or need further assistance, feel free to reach out.

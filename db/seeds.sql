@@ -3,7 +3,7 @@ INSERT INTO department (name) VALUES
   ("Mathematics"),
   ("English"),
   ("History"),
-  ("Spanish"),
+  ("Languages"),
   ("Science"),
   ("Art"),
   ("Admin");
