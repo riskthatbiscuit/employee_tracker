@@ -6,17 +6,6 @@
 
 The Employee Tracker CLI is a command-line interface application that helps manage employee data within a company. It allows users to view, add, update, and delete departments, roles, and employees.
 
-## Table of Contents 📚
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [License](#license)
-- [Contributing](#contributing)
-- [Tests](#tests)
-- [Questions](#questions)
-
 ## Installation 💻
 
 To install the Employee Tracker CLI, follow these steps:
