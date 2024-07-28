@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "start": "concurrently \"npm run server --prefix server\" \"npm run client --prefix client\"",
+    "server": "node server.js",
+    "client": "react-scripts start"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "prettier": "^3.3.3"
