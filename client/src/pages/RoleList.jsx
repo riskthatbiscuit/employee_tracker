@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { fetchEmployees, fetchRoles, fetchDepartments } from '../services/displays'
+import {
+  fetchEmployees,
+  fetchRoles,
+  fetchDepartments,
+} from '../services/displays'
 import { addRole } from '../services/additions'
 import { deleteRole } from '../services/deletions'
 import { useForm } from 'react-hook-form'
@@ -17,49 +21,57 @@ const RoleList = () => {
     departments: null,
   })
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const employeesResponse = await fetchEmployees()
-      if (!employeesResponse.ok) {
-        throw new Error(
-          `Error fetching employees: ${employeesResponse.statusText}`,
-        )
+  useEffect(() => {
+    const fetchData = async () => {
+      // console.log('Fetching data...')
+      try {
+        // console.log('Fetching employees 0...')
+        const employeesResponse = await fetchEmployees()
+        // console.log('Employees Response:', employeesResponse)
+        // if (!employeesResponse.ok) {
+        //   throw new Error(
+        //     `Error fetching employees: ${employeesResponse.statusText}`,
+        //   )
+        // }
+        // console.log('Employees Response 2:', employeesResponse)
+        const employeesData = await employeesResponse
+        // console.log('Employees Data 2:', employeesData)
+
+        const rolesResponse = await fetchRoles()
+        // if (!rolesResponse.ok) {
+        //   throw new Error(`Error fetching roles: ${rolesResponse.statusText}`)
+        // }
+        const rolesData = await rolesResponse
+        // console.log('Roles Data:', rolesData)
+
+        const departmentsResponse = await fetchDepartments()
+        // if (!departmentsResponse.ok) {
+        //   throw new Error(
+        //     `Error fetching departments: ${departmentsResponse.statusText}`,
+        //   )
+        // }
+        const departmentsData = await departmentsResponse
+        // console.log('Departments Data:', departmentsData)
+
+        setEmployees(employeesData)
+        setRoles(rolesData)
+        setDepartments(departmentsData)
+
+        setDebugInfo({
+          employees: employeesData,
+          roles: rolesData,
+          departments: departmentsData,
+        })
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        setError(error.message)
+      } finally {
+        setLoading(false)
       }
-      const employeesData = await employeesResponse.json()
-
-      const rolesResponse = await fetchRoles()
-      if (!rolesResponse.ok) {
-        throw new Error(`Error fetching roles: ${rolesResponse.statusText}`)
-      }
-      const rolesData = await rolesResponse.json()
-
-      const departmentsResponse = await fetchDepartments()
-      if (!departmentsResponse.ok) {
-        throw new Error(
-          `Error fetching departments: ${departmentsResponse.statusText}`,
-        )
-      }
-      const departmentsData = await departmentsResponse.json()
-
-      setEmployees(employeesData)
-      setRoles(rolesData)
-      setDepartments(departmentsData)
-
-      setDebugInfo({
-        employees: employeesData,
-        roles: rolesData,
-        departments: departmentsData,
-      })
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    } finally {
-      setLoading(false)
     }
-  }
 
-  fetchData()
-}, [])
+    fetchData()
+  }, []) // Ensure all dependencies are included
 
   const handleAddRole = async (data) => {
     try {

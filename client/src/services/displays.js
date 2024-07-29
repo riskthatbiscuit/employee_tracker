@@ -1,4 +1,6 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
+// const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
+const API_BASE_URL = 'https://infinite-waters-93089-7bd83e9457e8.herokuapp.com'
+console.log('API_BASE_URL:', API_BASE_URL)
 
 const EMPLOYEES_API_URL = `${API_BASE_URL}/api/employees`
 const DEPARTMENTS_API_URL = `${API_BASE_URL}/api/departments`
@@ -10,13 +12,18 @@ const logErrorResponse = async (response) => {
 }
 
 export const fetchEmployees = async () => {
+  console.log('Fetching employees 1...')
   try {
+    console.log('Fetching employees 2...')
     const response = await fetch(EMPLOYEES_API_URL)
+    console.log('Response:', response)
     if (!response.ok) {
       await logErrorResponse(response)
       throw new Error('Failed to fetch employees')
     }
-    return response.json()
+    const data = await response.json()
+    console.log('Employees Data:', data)
+    return data
   } catch (error) {
     console.error('Fetch error:', error)
     throw error

@@ -2,7 +2,7 @@
   "scripts": {
     "build1": "cd client && npm install && npm run build",
     "build": "cd client && npm install && npm run build",
-    "start": "node server/server.js",
+    "start": "concurrently \"node server/server.js\" \"npm run start --prefix client\"",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "devDependencies": {
