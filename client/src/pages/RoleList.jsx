@@ -17,22 +17,30 @@ const RoleList = () => {
     departments: null,
   })
 
-  // const getDepartments = async () => {
-  //   try {
-  //     const data = await fetchDepartments()
-  //     setDepartments(data)
-  //     setDebugInfo((prev) => ({ ...prev, departments: data }))
-  //   } catch (err) {
-  //     setError(err.message)
-  //   }
-  // }
-
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const employeesData = await fetchEmployees()
-      const rolesData = await fetchRoles()
-      const departmentsData = await fetchDepartments()
+      const employeesResponse = await fetchEmployees()
+      if (!employeesResponse.ok) {
+        throw new Error(
+          `Error fetching employees: ${employeesResponse.statusText}`,
+        )
+      }
+      const employeesData = await employeesResponse.json()
+
+      const rolesResponse = await fetchRoles()
+      if (!rolesResponse.ok) {
+        throw new Error(`Error fetching roles: ${rolesResponse.statusText}`)
+      }
+      const rolesData = await rolesResponse.json()
+
+      const departmentsResponse = await fetchDepartments()
+      if (!departmentsResponse.ok) {
+        throw new Error(
+          `Error fetching departments: ${departmentsResponse.statusText}`,
+        )
+      }
+      const departmentsData = await departmentsResponse.json()
 
       setEmployees(employeesData)
       setRoles(rolesData)
@@ -47,7 +55,7 @@ useEffect(() => {
       console.error('Error fetching data:', error)
     } finally {
       setLoading(false)
-    } 
+    }
   }
 
   fetchData()
