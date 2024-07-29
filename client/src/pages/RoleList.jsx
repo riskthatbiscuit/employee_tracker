@@ -16,15 +16,15 @@ const RoleList = () => {
     departments: null,
   })
 
-  const getDepartments = async () => {
-    try {
-      const data = await fetchDepartments()
-      setDepartments(data)
-      setDebugInfo((prev) => ({ ...prev, departments: data }))
-    } catch (err) {
-      setError(err.message)
-    }
-  }
+  // const getDepartments = async () => {
+  //   try {
+  //     const data = await fetchDepartments()
+  //     setDepartments(data)
+  //     setDebugInfo((prev) => ({ ...prev, departments: data }))
+  //   } catch (err) {
+  //     setError(err.message)
+  //   }
+  // }
 
 useEffect(() => {
   const fetchData = async () => {
@@ -44,7 +44,9 @@ useEffect(() => {
       })
     } catch (error) {
       console.error('Error fetching data:', error)
-    }
+    } finally {
+      setLoading(false)
+    } 
   }
 
   fetchData()
