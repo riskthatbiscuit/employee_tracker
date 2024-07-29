@@ -1,12 +1,14 @@
 {
   "scripts": {
+    "build1": "cd client && npm install && npm run build",
     "build": "cd client && npm install && npm run build",
-    "start": "concurrently \"npm run server --prefix server\" \"npm run client --prefix client\"",
-    "server": "node server/server.js",
-    "client": "react-scripts start"
+    "start": "node server/server.js",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "prettier": "^3.3.3"
-  }
-}
+  },
+    "dependencies": {
+    "express": "^4.17.1"
+}}

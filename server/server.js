@@ -3,6 +3,7 @@ const express = require('express')
 
 const mysql = require('mysql2')
 const cors = require('cors')
+const path = require('path'); // Ensure path is imported
 const questions = require('./queries/questions.js')
 const {
   viewAllEmployees,
@@ -32,6 +33,9 @@ app.use(cors())
 // Express middleware
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Connect to database
 const db = mysql.createConnection(
@@ -119,9 +123,10 @@ app.delete('/api/employees/:id', (req, res) => {
   res.json('Employee deleted')
 })
 
-app.use((req, res) => {
-  res.status(404).end()
-})
+// Catch-all handler to serve the React app for any other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
