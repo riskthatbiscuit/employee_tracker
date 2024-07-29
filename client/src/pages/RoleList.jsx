@@ -147,6 +147,10 @@ const RoleList = () => {
           </li>
         ))}
       </ul>
+      <div>
+        <h2>Debug Information</h2>
+        <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
+      </div>
     </div>
   )
 }
