@@ -8,16 +8,9 @@ const EmployeeDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {    
-    fetchEmployee()
-    fetchManagedEmployees()
-  }, [id, fetchEmployee, fetchManagedEmployees])
-
   const fetchEmployee = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/api/employees/${id}`,
-      )
+      const response = await fetch(`http://localhost:3001/api/employees/${id}`)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
@@ -30,20 +23,27 @@ const EmployeeDetail = () => {
     }
   }
 
-const fetchManagedEmployees = async () => {
-  try {
-    console.log(`Fetching employees managed by ${id}`)
-    const response = await fetch(`http://localhost:3001/api/employees/managed-by/${id}`,)
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
+  const fetchManagedEmployees = async () => {
+    try {
+      console.log(`Fetching employees managed by ${id}`)
+      const response = await fetch(
+        `http://localhost:3001/api/employees/managed-by/${id}`,
+      )
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      console.log(`Managed employees: ${JSON.stringify(data, null, 2)}`)
+      setManagedEmployees(data)
+    } catch (error) {
+      setError(error.message)
     }
-    const data = await response.json()
-    console.log(`Managed employees: ${JSON.stringify(data, null, 2)}`)
-    setManagedEmployees(data)
-  } catch (error) {
-    setError(error.message)
-  }}
+  }
 
+  useEffect(() => {
+    fetchEmployee()
+    fetchManagedEmployees()
+  }, [id, fetchEmployee, fetchManagedEmployees])
 
   useEffect(() => {
     if (employee) {
