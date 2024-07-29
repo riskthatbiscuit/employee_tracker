@@ -11,7 +11,7 @@ const EmployeeDetail = () => {
   useEffect(() => {    
     fetchEmployee()
     fetchManagedEmployees()
-  }, [id])
+  }, [id, fetchEmployee, fetchManagedEmployees])
 
   const fetchEmployee = async () => {
     try {
