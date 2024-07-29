@@ -40,10 +40,11 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 // Connect to database
 const db = mysql.createConnection(
   {
-    host: 'localhost',
-    user: 'root',
-    password: 'banjo',
-    database: 'employee_db',
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'banjo',
+    database: process.env.DB_NAME || 'employee_db',
+    port: process.env.DB_PORT || 3306,
   },
   console.log(`Connected to the employee_db database.`),
 )
