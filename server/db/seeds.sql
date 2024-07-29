@@ -1,3 +1,6 @@
+
+USE tz4vbnbz7ertdgt7;
+
 -- Insert departments
 INSERT INTO department (name) VALUES
   ("Mathematics"),
