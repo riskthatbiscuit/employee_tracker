@@ -76,9 +76,9 @@ const RoleList = () => {
     return <div className="text-center text-gray-500">Loading...</div>
   }
 
-  if (error) {
-    return <div className="text-center text-red-500">Error: {error}</div>
-  }
+  // if (error) {
+  //   return <div className="text-center text-red-500">Error: {error}</div>
+  // }
 
   return (
     <div className="container mx-auto p-4">
