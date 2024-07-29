@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "npm run build --prefix client",
+    "build": "cd client && npm install && npm run build",
     "start": "concurrently \"npm run server --prefix server\" \"npm run client --prefix client\"",
     "server": "node server/server.js",
     "client": "react-scripts start"
