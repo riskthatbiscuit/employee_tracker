@@ -10,11 +10,16 @@ const RoleList = () => {
   const [departments, setDepartments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [debugInfo, setDebugInfo] = useState({
+    roles: null,
+    departments: null,
+  })
 
   const getDepartments = async () => {
     try {
       const data = await fetchDepartments()
       setDepartments(data)
+      setDebugInfo((prev) => ({ ...prev, departments: data }))
     } catch (err) {
       setError(err.message)
     }
@@ -25,8 +30,8 @@ const RoleList = () => {
     const fetchRolesData = async () => {
       try {
         const data = await fetchRoles()
-        console.log(`Roles data`, data)
         setRoles(data)
+        setDebugInfo((prev) => ({ ...prev, roles: data }))
       } catch (error) {
         setError(error.message)
       } finally {
