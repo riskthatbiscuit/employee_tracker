@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { fetchRoles, fetchDepartments } from '../services/displays'
+import { fetchEmployees, fetchRoles, fetchDepartments } from '../services/displays'
 import { addRole } from '../services/additions'
 import { deleteRole } from '../services/deletions'
 import { useForm } from 'react-hook-form'
@@ -25,23 +25,29 @@ const RoleList = () => {
     }
   }
 
-  useEffect(() => {
-    // Fetch roles data from the backend
-    const fetchRolesData = async () => {
-      try {
-        const data = await fetchRoles()
-        setRoles(data)
-        setDebugInfo((prev) => ({ ...prev, roles: data }))
-      } catch (error) {
-        setError(error.message)
-      } finally {
-        setLoading(false)
-      }
-    }
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const employeesData = await fetchEmployees()
+      const rolesData = await fetchRoles()
+      const departmentsData = await fetchDepartments()
 
-    fetchRolesData()
-    getDepartments()
-  }, [])
+      setEmployees(employeesData)
+      setRoles(rolesData)
+      setDepartments(departmentsData)
+
+      setDebugInfo({
+        employees: employeesData,
+        roles: rolesData,
+        departments: departmentsData,
+      })
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
+  fetchData()
+}, [])
 
   const handleAddRole = async (data) => {
     try {
