@@ -8,6 +8,7 @@ const RoleList = () => {
   const { register, handleSubmit, reset } = useForm()
   const [roles, setRoles] = useState([])
   const [departments, setDepartments] = useState([])
+  const [employees, setEmployees] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [debugInfo, setDebugInfo] = useState({
