@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { fetchEmployee, fetchManagedEmployees } from '../services/displays'
 
 const EmployeeDetail = () => {
   const { id } = useParams() // Get the employee ID from the URL
@@ -8,42 +9,24 @@ const EmployeeDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const fetchEmployee = useCallback(async () => {
-    try {
-      const response = await fetch(`http://localhost:3001/api/employees/${id}`)
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      setEmployee(data[0])
-    } catch (error) {
-      setError(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }, [id])
-
-  const fetchManagedEmployees = useCallback(async () => {
-    try {
-      console.log(`Fetching employees managed by ${id}`)
-      const response = await fetch(
-        `http://localhost:3001/api/employees/managed-by/${id}`,
-      )
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log(`Managed employees: ${JSON.stringify(data, null, 2)}`)
-      setManagedEmployees(data)
-    } catch (error) {
-      setError(error.message)
-    }
-  }, [id])
-
   useEffect(() => {
-    fetchEmployee()
-    fetchManagedEmployees()
-  }, [id, fetchEmployee, fetchManagedEmployees])
+    const fetchData = async () => {
+      try {
+        const employeeData = await fetchEmployee(id)
+        const managedEmployeesData = await fetchManagedEmployees(id)
+
+        setEmployee(employeeData[0])
+        setManagedEmployees(managedEmployeesData)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        setError(error.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [id])
 
   useEffect(() => {
     if (employee) {

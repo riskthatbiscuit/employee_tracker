@@ -12,17 +12,13 @@ const logErrorResponse = async (response) => {
 }
 
 export const fetchEmployees = async () => {
-  console.log('Fetching employees 1...')
   try {
-    console.log('Fetching employees 2...')
     const response = await fetch(EMPLOYEES_API_URL)
-    console.log('Response:', response)
     if (!response.ok) {
       await logErrorResponse(response)
       throw new Error('Failed to fetch employees')
     }
     const data = await response.json()
-    console.log('Employees Data:', data)
     return data
   } catch (error) {
     console.error('Fetch error:', error)
@@ -50,6 +46,35 @@ export const fetchDepartments = async () => {
     if (!response.ok) {
       await logErrorResponse(response)
       throw new Error('Failed to fetch departments')
+    }
+    return response.json()
+  } catch (error) {
+    console.error('Fetch error:', error)
+    throw error
+  }
+}
+
+export const fetchEmployee = async (id) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/employees/${id}`)
+    if (!response.ok) {
+      await logErrorResponse(response)
+      throw new Error('Failed to fetch employee')
+    }
+    return response.json()
+  } catch (error) {
+    console.error('Fetch error:', error)
+    throw error
+  }
+}
+
+export const fetchManagedEmployees = async (id) => {
+  try {
+    console.log(`Fetching employees managed by ${id}`)
+    const response = await fetch(`${API_BASE_URL}/api/employees/managed-by/${id}`)
+    if (!response.ok) {
+      await logErrorResponse(response)
+      throw new Error('Failed to fetch managed employees')
     }
     return response.json()
   } catch (error) {

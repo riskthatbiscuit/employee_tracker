@@ -15,53 +15,20 @@ const RoleList = () => {
   const [employees, setEmployees] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [debugInfo, setDebugInfo] = useState({
-    employees: null,
-    roles: null,
-    departments: null,
-  })
 
   useEffect(() => {
     const fetchData = async () => {
-      // console.log('Fetching data...')
       try {
-        // console.log('Fetching employees 0...')
-        const employeesResponse = await fetchEmployees()
-        // console.log('Employees Response:', employeesResponse)
-        // if (!employeesResponse.ok) {
-        //   throw new Error(
-        //     `Error fetching employees: ${employeesResponse.statusText}`,
-        //   )
-        // }
-        // console.log('Employees Response 2:', employeesResponse)
-        const employeesData = await employeesResponse
-        // console.log('Employees Data 2:', employeesData)
-
-        const rolesResponse = await fetchRoles()
-        // if (!rolesResponse.ok) {
-        //   throw new Error(`Error fetching roles: ${rolesResponse.statusText}`)
-        // }
-        const rolesData = await rolesResponse
-        // console.log('Roles Data:', rolesData)
-
-        const departmentsResponse = await fetchDepartments()
-        // if (!departmentsResponse.ok) {
-        //   throw new Error(
-        //     `Error fetching departments: ${departmentsResponse.statusText}`,
-        //   )
-        // }
-        const departmentsData = await departmentsResponse
-        // console.log('Departments Data:', departmentsData)
+        const [employeesData, rolesData, departmentsData] = await Promise.all([
+          fetchEmployees(),
+          fetchRoles(),
+          fetchDepartments(),
+        ])
 
         setEmployees(employeesData)
         setRoles(rolesData)
         setDepartments(departmentsData)
 
-        setDebugInfo({
-          employees: employeesData,
-          roles: rolesData,
-          departments: departmentsData,
-        })
       } catch (error) {
         console.error('Error fetching data:', error)
         setError(error.message)
@@ -71,7 +38,7 @@ const RoleList = () => {
     }
 
     fetchData()
-  }, []) // Ensure all dependencies are included
+  }, [])
 
   const handleAddRole = async (data) => {
     try {
@@ -177,10 +144,6 @@ const RoleList = () => {
           </li>
         ))}
       </ul>
-      <div>
-        <h2>Debug Information</h2>
-        <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
-      </div>
     </div>
   )
 }
