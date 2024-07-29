@@ -12,6 +12,7 @@ const RoleList = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [debugInfo, setDebugInfo] = useState({
+    employees: null,
     roles: null,
     departments: null,
   })
