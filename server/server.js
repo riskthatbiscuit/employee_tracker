@@ -27,6 +27,11 @@ const {
 const PORT = process.env.PORT || 3001
 const app = express()
 
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://infinite-waters-93089-7bd83e9457e8.herokuapp.com',
+]
 // Cors middleware
 app.use(
   cors({
