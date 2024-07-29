@@ -28,7 +28,17 @@ const PORT = process.env.PORT || 3001
 const app = express()
 
 // Cors middleware
-app.use(cors())
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
+  }),
+)
 
 // Express middleware
 app.use(express.urlencoded({ extended: false }))
