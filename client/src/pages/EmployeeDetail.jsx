@@ -8,7 +8,7 @@ const EmployeeDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const fetchEmployee = async () => {
+  const fetchEmployee = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:3001/api/employees/${id}`)
       if (!response.ok) {
@@ -21,9 +21,9 @@ const EmployeeDetail = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [id])
 
-  const fetchManagedEmployees = async () => {
+  const fetchManagedEmployees = useCallback(async () => {
     try {
       console.log(`Fetching employees managed by ${id}`)
       const response = await fetch(
@@ -38,7 +38,7 @@ const EmployeeDetail = () => {
     } catch (error) {
       setError(error.message)
     }
-  }
+  }, [id])
 
   useEffect(() => {
     fetchEmployee()
